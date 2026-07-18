@@ -1,3 +1,4 @@
+awww
 base
 base-devel
 bluez
@@ -11,15 +12,16 @@ efibootmgr
 fish
 git
 grub
+gvim
 htop
 hyprland
 hyprlock
 hyprmod
-hyprpaper
 hyprshot
 iw
 iwd
 kitty
+less
 lib32-nvidia-utils
 linux
 linux-firmware-realtek
@@ -29,6 +31,7 @@ linux-lts-headers
 linux-zen
 linux-zen-headers
 lvm2
+matugen-bin
 minecraft-launcher
 mtools
 neofetch
@@ -43,6 +46,7 @@ os-prober
 otf-font-awesome
 pavucontrol
 pipewire-pulse
+python-pywal16
 qt5-wayland
 qt6-wayland
 rofi
@@ -59,7 +63,6 @@ ttf-jetbrains-mono-nerd
 ttf-nerd-fonts-symbols
 tumbler
 usbutils
-vim
 visual-studio-code-bin
 waybar-cava-git
 woff2-font-awesome

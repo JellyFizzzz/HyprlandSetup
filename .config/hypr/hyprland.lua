@@ -1,9 +1,6 @@
 -- HyprMod managed settings
 require("hyprland-gui")
 
--- Hyprpapr
-require("modules.hyprpaper")
-
 require("modules.monitors")
 require("modules.keybinds")
 require("modules.autostart")

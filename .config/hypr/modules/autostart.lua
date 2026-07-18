@@ -9,6 +9,6 @@
 --
 hl.on("hyprland.start", function () 
   hl.exec_cmd("~/.config/waybar/scripts/launch.sh")
-  hl.exec_cmd("sleep 0.5 && hyprpaper")
+  hl.exec_cmd("awww-daemon")
   hl.exec_cmd("swaync")
 end)
