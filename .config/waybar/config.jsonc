@@ -16,10 +16,10 @@
         "battery"
     ],
     "clock#left": {
-        "format": "{:%H}"
+        "format": "{:%H:%M}"
     },
     "clock#right": {
-        "format": "{:%M}"
+        "format": "{:%d-%m-%Y}"
     },
     "hyprland/workspaces": {
         "format": "{icon}",
@@ -36,7 +36,7 @@
             "10": ""
         },
         "persistent-workspaces": {
-            "*": 10, // 5 workspaces by default on every monitor
+            "*": 5, // 5 workspaces by default on every monitor
             "HDMI-A-1": 3 // but only three on HDMI-A-1
         }
     },

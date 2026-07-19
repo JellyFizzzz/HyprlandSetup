@@ -1,0 +1,16 @@
+@define-color bg0 {background};
+@define-color bg1 {color0};
+@define-color bg2 {color8};
+@define-color bg3 {color8};
+@define-color bg4 {color0};
+@define-color fg {foreground};
+@define-color red {color1};
+@define-color orange {color11};
+@define-color yellow {color3};
+@define-color green {color2};
+@define-color aqua {color6};
+@define-color blue {color4};
+@define-color purple {color5};
+@define-color grey0 {color7};
+@define-color grey1 {color8};
+@define-color grey2 {color0};
