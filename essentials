@@ -20,6 +20,7 @@ hyprmod
 hyprshot
 iw
 iwd
+jre21-openjdk
 kitty
 less
 lib32-nvidia-utils
@@ -36,7 +37,9 @@ minecraft-launcher
 mpv
 mtools
 neofetch
+network-manager-applet
 networkmanager
+nm-connection-editor
 nvidia-open-dkms
 nvidia-prime
 nvidia-settings
@@ -47,6 +50,7 @@ os-prober
 otf-font-awesome
 pavucontrol
 pipewire-pulse
+pixie-sddm-git
 python-pywal16
 qt5-wayland
 qt6-wayland
