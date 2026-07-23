@@ -11,6 +11,7 @@ dosfstools
 efibootmgr
 fish
 git
+gnome-keyring
 grub
 gvim
 htop
@@ -56,6 +57,7 @@ qt5-wayland
 qt6-wayland
 rofi
 sddm
+seahorse
 sudo
 supergfxctl
 swaync
@@ -67,9 +69,11 @@ ttf-jetbrains-mono
 ttf-jetbrains-mono-nerd
 ttf-nerd-fonts-symbols
 tumbler
+unzip
 usbutils
 visual-studio-code-bin
 waybar-cava-git
+wlogout
 woff2-font-awesome
 xdg-desktop-portal-hyprland
 yay
