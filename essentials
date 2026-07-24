@@ -5,7 +5,6 @@ bluez
 bluez-utils
 brave-bin
 cava
-cmatrix
 dkms
 dosfstools
 efibootmgr
@@ -21,7 +20,6 @@ hyprmod
 hyprshot
 iw
 iwd
-jre21-openjdk
 kitty
 less
 lib32-nvidia-utils
@@ -34,10 +32,8 @@ linux-zen
 linux-zen-headers
 lvm2
 matugen-bin
-minecraft-launcher
 mpv
 mtools
-neofetch
 network-manager-applet
 networkmanager
 nm-connection-editor
@@ -45,7 +41,6 @@ nvidia-open-dkms
 nvidia-prime
 nvidia-settings
 nvidia-utils
-obs-studio
 openssh
 os-prober
 otf-font-awesome
@@ -71,10 +66,8 @@ ttf-nerd-fonts-symbols
 tumbler
 unzip
 usbutils
-visual-studio-code-bin
 waybar-cava-git
 wlogout
 woff2-font-awesome
 xdg-desktop-portal-hyprland
 yay
-yay-debug
