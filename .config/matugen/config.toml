@@ -1,0 +1,9 @@
+[config]
+
+[templates.gtk3]
+input_path = '~/.config/matugen/templates/gtk.tmpl'
+output_path = '~/.config/gtk-3.0/colors.css'
+
+[templates.gtk4]
+input_path = '~/.config/matugen/templates/gtk.tmpl'
+output_path = '~/.config/gtk-4.0/colors.css'
