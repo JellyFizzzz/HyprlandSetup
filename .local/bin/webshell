@@ -1,0 +1,314 @@
+#!/usr/bin/env python3
+"""
+webshell — a truly minimal, text-only terminal browser.
+ 
+No JS, no CSS, no images, no tabs. Fetches pages with requests,
+strips them to text + numbered links with BeautifulSoup, and
+renders in your terminal themed with your current pywal palette.
+ 
+Search goes through DuckDuckGo's HTML-only endpoint (Google
+blocks non-JS scraping almost immediately; DDG's html.duckduckgo.com
+is built for exactly this use case).
+ 
+Deps (Arch):
+    sudo pacman -S python-requests python-beautifulsoup4
+ 
+Run:
+    python webshell.py
+ 
+Controls:
+    - Type a search query and hit enter to search
+    - Type a number to follow that link
+    - 'b' to go back
+    - 's' to start a new search
+    - 'q' to quit
+"""
+ 
+import sys
+import json
+import shutil
+import textwrap
+from pathlib import Path
+from urllib.parse import urljoin, quote_plus, urlparse, parse_qs, unquote
+ 
+import requests
+from bs4 import BeautifulSoup
+ 
+WAL_COLORS_PATH = Path.home() / ".cache" / "wal" / "colors.json"
+DDG_HTML = "https://html.duckduckgo.com/html/"
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) webshell/1.0"
+ 
+FALLBACK_PALETTE = {
+    "background": "#1d2021",
+    "foreground": "#d4be98",
+    "accent": "#a9b665",
+    "muted": "#665c54",
+    "link": "#7daea3",
+    "title": "#e78a4e",
+}
+ 
+ 
+def load_palette():
+    try:
+        data = json.loads(WAL_COLORS_PATH.read_text())
+        cols = data["colors"]
+        special = data["special"]
+        return {
+            "background": special.get("background", FALLBACK_PALETTE["background"]),
+            "foreground": special.get("foreground", FALLBACK_PALETTE["foreground"]),
+            "accent": cols.get("color4", FALLBACK_PALETTE["accent"]),
+            "muted": cols.get("color8", FALLBACK_PALETTE["muted"]),
+            "link": cols.get("color6", FALLBACK_PALETTE["link"]),
+            "title": cols.get("color3", FALLBACK_PALETTE["title"]),
+        }
+    except Exception:
+        return FALLBACK_PALETTE
+ 
+ 
+def hex_to_rgb(h):
+    h = h.lstrip("#")
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+ 
+ 
+class Ink:
+    """Truecolor ANSI helper, themed from pywal."""
+ 
+    def __init__(self, palette):
+        self.p = palette
+ 
+    def fg(self, key, text):
+        r, g, b = hex_to_rgb(self.p[key])
+        return f"\033[38;2;{r};{g};{b}m{text}\033[0m"
+ 
+    def bold(self, text):
+        return f"\033[1m{text}\033[0m"
+ 
+    def dim(self, text):
+        return f"\033[2m{text}\033[0m"
+ 
+ 
+def term_width():
+    return shutil.get_terminal_size(fallback=(100, 24)).columns
+ 
+ 
+def fetch(url, params=None):
+    resp = requests.get(
+        url, params=params, headers={"User-Agent": USER_AGENT}, timeout=10
+    )
+    resp.raise_for_status()
+    return resp.text
+ 
+ 
+def search(query, ink):
+    html = fetch(DDG_HTML, params={"q": query})
+    soup = BeautifulSoup(html, "html.parser")
+    results = []
+    for result in soup.select(".result"):
+        link_tag = result.select_one(".result__a")
+        snippet_tag = result.select_one(".result__snippet")
+        if not link_tag:
+            continue
+        href = link_tag.get("href")
+        title = link_tag.get_text(strip=True)
+        snippet = snippet_tag.get_text(strip=True) if snippet_tag else ""
+        if href:
+            results.append({"title": title, "url": resolve_ddg_url(href), "snippet": snippet})
+    return results
+ 
+ 
+def resolve_ddg_url(href):
+    """DDG's HTML results link through a redirect like
+    //duckduckgo.com/l/?uddg=<real-url-encoded>&rut=... — pull the
+    real target out of the uddg param instead of following the hop."""
+    if href.startswith("//"):
+        href = "https:" + href
+    parsed = urlparse(href)
+    qs = parse_qs(parsed.query)
+    if "uddg" in qs:
+        return unquote(qs["uddg"][0])
+    return href
+ 
+ 
+def extract_page(url, ink):
+    html = fetch(url)
+    soup = BeautifulSoup(html, "html.parser")
+ 
+    for tag in soup(["script", "style", "noscript", "svg", "footer", "nav"]):
+        tag.decompose()
+ 
+    title = soup.title.get_text(strip=True) if soup.title else url
+ 
+    links = []
+    seen = set()
+    for a in soup.find_all("a", href=True):
+        text = a.get_text(strip=True)
+        href = a["href"]
+        if not text or href.startswith("#") or href.startswith("javascript:"):
+            continue
+        full = urljoin(url, href)
+        if full in seen:
+            continue
+        seen.add(full)
+        links.append({"text": text, "url": full})
+ 
+    body = soup.body if soup.body else soup
+    paragraphs = []
+    for el in body.find_all(["p", "h1", "h2", "h3", "li"]):
+        text = el.get_text(strip=True)
+        if text:
+            paragraphs.append(text)
+ 
+    return {"title": title, "url": url, "paragraphs": paragraphs, "links": links}
+ 
+ 
+def render_search_results(results, query, ink):
+    width = term_width()
+    print()
+    print(ink.fg("title", ink.bold(f"  Search: {query}")))
+    print(ink.fg("muted", "  " + "─" * min(width - 2, 60)))
+    print()
+    if not results:
+        print(ink.dim("  No results."))
+        return
+    for i, r in enumerate(results, start=1):
+        num = ink.fg("accent", ink.bold(f"[{i}]"))
+        print(f"  {num} {ink.fg('link', r['title'])}")
+        print(ink.dim(f"      {r['url']}"))
+        if r["snippet"]:
+            wrapped = textwrap.fill(
+                r["snippet"], width=min(width - 8, 90),
+                initial_indent="      ", subsequent_indent="      "
+            )
+            print(ink.fg("foreground", wrapped))
+        print()
+ 
+ 
+def render_page(page, ink):
+    width = term_width()
+    print()
+    print(ink.fg("title", ink.bold(f"  {page['title']}")))
+    print(ink.dim(f"  {page['url']}"))
+    print(ink.fg("muted", "  " + "─" * min(width - 2, 60)))
+    print()
+ 
+    body_text = "\n\n".join(page["paragraphs"][:40])
+    for para in body_text.split("\n\n"):
+        wrapped = textwrap.fill(
+            para, width=min(width - 4, 100),
+            initial_indent="  ", subsequent_indent="  "
+        )
+        print(ink.fg("foreground", wrapped))
+        print()
+ 
+    if page["links"]:
+        print(ink.fg("muted", "  " + "─" * min(width - 2, 60)))
+        print(ink.fg("title", ink.bold("  Links")))
+        print()
+        for i, link in enumerate(page["links"][:40], start=1):
+            num = ink.fg("accent", ink.bold(f"[{i}]"))
+            print(f"  {num} {ink.fg('link', link['text'][:80])}")
+ 
+ 
+def print_footer(ink, in_page):
+    print()
+    hint = "type a number to follow a link  ·  b: back  ·  s: search  ·  q: quit"
+    print(ink.dim(f"  {hint}"))
+    print()
+ 
+ 
+def main():
+    palette = load_palette()
+    ink = Ink(palette)
+ 
+    history = []  # stack of ("search", query, results) or ("page", page)
+ 
+    print(ink.fg("title", ink.bold("\n  webshell — minimal text browser\n")))
+    print(ink.dim("  Type a search query to begin. 'q' to quit anytime.\n"))
+ 
+    current = None  # ("search", query, results) | ("page", page)
+ 
+    while True:
+        try:
+            prompt = ink.fg("accent", "  > ")
+            user_input = input(prompt).strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            break
+ 
+        if not user_input:
+            continue
+ 
+        if user_input.lower() == "q":
+            break
+ 
+        if user_input.lower() == "b":
+            if history:
+                current = history.pop()
+            else:
+                print(ink.dim("  Nothing to go back to."))
+            _render_current(current, ink)
+            continue
+ 
+        if user_input.lower() == "s":
+            print(ink.dim("  Enter your next query directly."))
+            continue
+ 
+        if user_input.isdigit():
+            idx = int(user_input) - 1
+            if current is None:
+                print(ink.dim("  Nothing to select from yet."))
+                continue
+            kind = current[0]
+            try:
+                if kind == "search":
+                    _, query, results = current
+                    target_url = results[idx]["url"]
+                elif kind == "page":
+                    _, page = current
+                    target_url = page["links"][idx]["url"]
+                else:
+                    target_url = None
+            except IndexError:
+                print(ink.dim("  No such number."))
+                continue
+ 
+            if target_url:
+                try:
+                    page = extract_page(target_url, ink)
+                except requests.RequestException as e:
+                    print(ink.fg("muted", f"  Failed to load: {e}"))
+                    continue
+                if current is not None:
+                    history.append(current)
+                current = ("page", page)
+                _render_current(current, ink)
+            continue
+ 
+        # otherwise: treat as a new search query
+        try:
+            results = search(user_input, ink)
+        except requests.RequestException as e:
+            print(ink.fg("muted", f"  Search failed: {e}"))
+            continue
+        if current is not None:
+            history.append(current)
+        current = ("search", user_input, results)
+        _render_current(current, ink)
+ 
+ 
+def _render_current(current, ink):
+    if current is None:
+        return
+    kind = current[0]
+    if kind == "search":
+        _, query, results = current
+        render_search_results(results, query, ink)
+        print_footer(ink, in_page=False)
+    elif kind == "page":
+        _, page = current
+        render_page(page, ink)
+        print_footer(ink, in_page=True)
+ 
+ 
+if __name__ == "__main__":
+    main()

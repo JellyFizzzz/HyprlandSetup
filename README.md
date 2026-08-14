@@ -246,7 +246,7 @@ Quick setup:
 - Ambient audio only starts if nothing else is currently playing (checked via `playerctl`), and only checks at the moment of switching — it won't duck automatically if other media starts later.
 - Toggle bound to `SUPER + SHIFT + A`.
 
-![](screenshots/Rofi.png)
+![](screenshots/Themes.png)
 
 ---
 

@@ -5,7 +5,7 @@ base-devel
 blueman
 bluez
 bluez-utils
-brave-bin
+brightnessctl
 cava
 cmatrix
 dkms
@@ -26,7 +26,6 @@ hyprlock
 hyprshot
 iw
 iwd
-jre21-openjdk
 kitty
 less
 lib32-nvidia-utils
@@ -39,7 +38,6 @@ linux-zen
 linux-zen-headers
 lvm2
 matugen-bin
-minecraft-launcher
 mpv
 mtools
 nemo
@@ -53,7 +51,6 @@ nvidia-prime
 nvidia-settings
 nvidia-utils
 nwg-look
-obs-studio
 openssh
 os-prober
 otf-font-awesome
@@ -67,7 +64,6 @@ rofi
 satty
 sddm
 seahorse
-steam
 sudo
 supergfxctl
 swaync

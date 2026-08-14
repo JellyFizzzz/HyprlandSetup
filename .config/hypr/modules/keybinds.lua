@@ -4,9 +4,10 @@
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "thunar"
+local fileManager = "nemo"
 local menu        = "~/.config/rofi/type-2/launcher.sh"
 local browser = "brave"
+local minibrowser = "kitty --class webshell -e webshell"
 local taskbar = "~/.config/waybar/scripts/launch.sh"
 local notification = "swaync-client -t"
 
@@ -18,26 +19,25 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd(minibrowser))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(notification))
 hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("~/.local/bin/walset-audio-toggle.sh"))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("wlogout"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("wlogout"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + grave", hl.dsp.exec_cmd("hyprshot -m output -o ~/Pictures/Screenshots"))
 hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd("~/.local/bin/walset.sh"))
-hl.bind(mainMod .. " + V", hl.dsp.window.fullscreen({mode = 1}))
+hl.bind(mainMod .. " + V", hl.dsp.window.fullscreen({mode = 1, layout_aware = true}))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd(taskbar))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
 -- Move focus with mainMod + arrow keys
-hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + left", hl.dsp.layout("focus l"))
+hl.bind(mainMod .. " + right", hl.dsp.layout("focus r"))
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
@@ -72,3 +72,7 @@ hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = tr
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+
+-- Function keys
+hl.bind("CTRL + F5", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 10%-"), { locked = true, repeating = true })
+hl.bind("CTRL + F6", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 10%+"), { locked = true, repeating = true })

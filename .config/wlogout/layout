@@ -1,7 +1,7 @@
 
 {
     "label" : "lock",
-    "action" : "hyprlock",
+    "action" : "sleep 0.3 && setsid hyprlock &",
     "text" : "Lock",
     "keybind" : "l"
 }

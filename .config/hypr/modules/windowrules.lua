@@ -42,3 +42,25 @@ hl.layer_rule({
     match = {namespace = "swaync-control-center"},
     animation = "slide top"
 })
+
+hl.window_rule({
+    name = "nemo-floating",
+    match = {
+        class = "^nemo$",
+    },
+    float = true,
+    size = { 1100, 700 }, -- Sized to preserve sidebar utility
+    center = true,
+})
+
+hl.window_rule({
+    name = "webshell-floating",
+    match = {
+        class = "^webshell$",
+    },
+    float = true,
+    size = { 900, 700 },
+    center = true,
+})
+
+

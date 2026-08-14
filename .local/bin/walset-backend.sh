@@ -16,11 +16,13 @@ notify-send "Changing theme" "Applying new wallpaper and updating colours..."
 # Set wallpaper
 awww img "$IMAGE" --transition-type center --transition-duration 1.0 --transition-fps 60
 
-# Generate pywal colours (pushed to terminal too, for wal.vim)
+# Generate pywal colours (pushed to terminal too, for wal.vim) and update throughout workspaces
 wal -i "$IMAGE" -nte
+kitty @ --to unix:/tmp/kitty-socket set-colors --all ~/.cache/wal/colors-kitty.conf 2>/dev/null
 
-# Copy colours from wal to waybar dir for easy access
-cp ~/.cache/wal/waybar-colours.css ~/.config/waybar/colours/wal-generated.css
+# Copy colours from wal to appropriate dir for easy access
+cp ~/.cache/wal/waybar-colours.css ~/.config/waybar/colours/wal-generated.css 2>/dev/null
+cp ~/.cache/wal/wlogout-colours.css ~/.config/wlogout/ 2>/dev/null
 
 # Generate Material You colours (auto-pick primary color, no interactive prompt)
 matugen image "$IMAGE" --source-color-index 1
@@ -32,6 +34,7 @@ waybar > /dev/null 2>&1 &
 # Refresh swaync
 pkill swaync || true
 swaync > /dev/null 2>&1 &
+# nemo -q 2>/dev/null
 sleep 0.5
 
 # Ambient audio per wallpaper
@@ -48,7 +51,7 @@ fi
 
 if [ -f "$AUDIO_FILE" ]; then
     if ! playerctl status 2>/dev/null | grep -q "Playing"; then
-        mpv --no-video --loop-file=inf --volume=50 "$AUDIO_FILE" > /dev/null 2>&1 &
+        mpv --no-video --loop-file=inf --volume=100 --af=loudnorm "$AUDIO_FILE" > /dev/null 2>&1 &
         echo $! > "$PIDFILE"
     fi
 fi

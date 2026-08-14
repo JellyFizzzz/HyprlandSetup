@@ -5,6 +5,10 @@ hl.config({
     dwindle = {
         preserve_split = true, -- You probably want this
     },
+    scrolling = {
+	    fullscreen_on_one_column = true,
+	    wrap_focus = true,
+    },
 })
 
 -- See https://wiki.hypr.land/Configuring/Layouts/Master-Layout/ for more
