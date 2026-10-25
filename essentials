@@ -1,3 +1,4 @@
+7zip
 adw-gtk-theme
 awww
 base
@@ -5,6 +6,7 @@ base-devel
 blueman
 bluez
 bluez-utils
+brave-bin
 brightnessctl
 cava
 cmatrix
@@ -16,6 +18,10 @@ ffmpegthumbnailer
 fish
 fzf
 git
+glad
+glew
+glfw
+glm
 gnome-keyring
 grub
 gst-plugins-good
@@ -26,6 +32,7 @@ hyprlock
 hyprshot
 iw
 iwd
+jre21-openjdk
 kitty
 less
 lib32-nvidia-utils
@@ -38,6 +45,8 @@ linux-zen
 linux-zen-headers
 lvm2
 matugen-bin
+mgba-qt
+minecraft-launcher
 mpv
 mtools
 nemo
@@ -51,19 +60,26 @@ nvidia-prime
 nvidia-settings
 nvidia-utils
 nwg-look
+obs-studio
 openssh
 os-prober
 otf-font-awesome
+pacman-contrib
 pavucontrol
 pipewire-pulse
 pixie-sddm-git
+python-beautifulsoup4
 python-pywal16
+python-requests
 qt5-wayland
 qt6-wayland
+quickshell
 rofi
 satty
 sddm
 seahorse
+steam
+stress-ng
 sudo
 supergfxctl
 swaync
@@ -81,4 +97,5 @@ woff2-font-awesome
 xdg-desktop-portal-hyprland
 yay
 yay-debug
+zip
 zoxide

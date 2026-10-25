@@ -11,31 +11,16 @@ if [ ! -f "$IMAGE" ]; then
     exit 1
 fi
 
-notify-send "Changing theme" "Applying new wallpaper and updating colours..."
-
 # Set wallpaper
 awww img "$IMAGE" --transition-type center --transition-duration 1.0 --transition-fps 60
 
-# Generate pywal colours (pushed to terminal too, for wal.vim) and update throughout workspaces
+# Generate pywal colours (pushed to terminal too, for wal.vim). The island reads
+# ~/.cache/wal/colors.json live, so there is nothing to restart or copy.
 wal -i "$IMAGE" -nte
 kitty @ --to unix:/tmp/kitty-socket set-colors --all ~/.cache/wal/colors-kitty.conf 2>/dev/null
 
-# Copy colours from wal to appropriate dir for easy access
-cp ~/.cache/wal/waybar-colours.css ~/.config/waybar/colours/wal-generated.css 2>/dev/null
-cp ~/.cache/wal/wlogout-colours.css ~/.config/wlogout/ 2>/dev/null
-
 # Generate Material You colours (auto-pick primary color, no interactive prompt)
 matugen image "$IMAGE" --source-color-index 1
-
-# Refresh waybar
-pkill waybar || true
-waybar > /dev/null 2>&1 &
-
-# Refresh swaync
-pkill swaync || true
-swaync > /dev/null 2>&1 &
-# nemo -q 2>/dev/null
-sleep 0.5
 
 # Ambient audio per wallpaper
 AUDIO_DIR="$HOME/Music/WallpaperAudio"
@@ -56,4 +41,5 @@ if [ -f "$AUDIO_FILE" ]; then
     fi
 fi
 
-notify-send "Theme applied" "Wallpaper and theme changed successfully!"
+# One quiet, short-lived notification (low urgency = shortest island popup)
+notify-send -u low "Theme applied" "Wallpaper and theme changed successfully!"

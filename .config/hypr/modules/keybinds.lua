@@ -5,11 +5,11 @@
 -- Set programs that you use
 local terminal    = "kitty"
 local fileManager = "nemo"
-local menu        = "~/.config/rofi/type-2/launcher.sh"
+local menu        = "qs -c island ipc call island toggle launcher"
 local browser = "brave"
 local minibrowser = "kitty --class webshell -e webshell"
-local taskbar = "~/.config/waybar/scripts/launch.sh"
-local notification = "swaync-client -t"
+local taskbar = "qs -c island ipc call island toggle main"
+local notification = "qs -c island ipc call island toggle center"
 
 ---------------------
 ---- KEYBINDINGS ----
@@ -25,19 +25,19 @@ hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(notification))
 hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("~/.local/bin/walset-audio-toggle.sh"))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("wlogout"))
+hl.bind(mainMod .. " + L",   hl.dsp.exec_cmd("qs -c island ipc call island toggle power"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + grave", hl.dsp.exec_cmd("hyprshot -m output -o ~/Pictures/Screenshots"))
-hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd("~/.local/bin/walset.sh"))
+hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd("qs -c island ipc call island toggle wallpaper"))
 hl.bind(mainMod .. " + V", hl.dsp.window.fullscreen({mode = 1, layout_aware = true}))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd(taskbar))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
--- Move focus with mainMod + arrow keys
-hl.bind(mainMod .. " + left", hl.dsp.layout("focus l"))
-hl.bind(mainMod .. " + right", hl.dsp.layout("focus r"))
+-- Move focus with mainMod + arrow keys (Doesn't work on dwindle; scrolling only)
+-- hl.bind(mainMod .. " + left", hl.dsp.layout("focus l"))
+-- hl.bind(mainMod .. " + right", hl.dsp.layout("focus r"))
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]

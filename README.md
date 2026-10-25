@@ -257,3 +257,4 @@ Quick setup:
 - The wallpaper switching helper is located in `.local/bin/walset.sh` and expects wallpapers in `~/Pictures/Wallpapers`.
 - This repo intentionally excludes personal/system-level configuration not specific to the Hyprland desktop itself (e.g. network manager backend selection), to keep scope focused on the desktop environment.
 - After Hyprland updates, config values (especially animation/spring constants) may need re-tuning even without editing this repo, since Hyprland's internal interpretation of those values can shift between versions.
+- The dynamic island uses the SF-Pro font from Apple which isn't included in the repo. If you want the exact font, you can download the `.dmg` file from the apple developer site.
